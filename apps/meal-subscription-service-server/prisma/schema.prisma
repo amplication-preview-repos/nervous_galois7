@@ -1,0 +1,98 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model MealPlan {
+  createdAt   DateTime @default(now())
+  description String?
+  duration    Int?
+  id          String   @id @default(cuid())
+  image       Json?
+  menus       Menu[]
+  price       Float?
+  title       String?
+  updatedAt   DateTime @updatedAt
+}
+
+model Vendor {
+  address      String?
+  contactEmail String?
+  contactPhone String?
+  createdAt    DateTime @default(now())
+  id           String   @id @default(cuid())
+  logo         Json?
+  name         String?
+  updatedAt    DateTime @updatedAt
+}
+
+model Notification {
+  createdAt DateTime                   @default(now())
+  id        String                     @id @default(cuid())
+  message   String?
+  sentDate  DateTime?
+  typeField EnumNotificationTypeField?
+  updatedAt DateTime                   @updatedAt
+}
+
+model Subscription {
+  createdAt DateTime                @default(now())
+  endDate   DateTime?
+  id        String                  @id @default(cuid())
+  startDate DateTime?
+  status    EnumSubscriptionStatus?
+  updatedAt DateTime                @updatedAt
+}
+
+model Payment {
+  amount        Float?
+  createdAt     DateTime                  @default(now())
+  id            String                    @id @default(cuid())
+  paymentDate   DateTime?
+  paymentMethod EnumPaymentPaymentMethod?
+  status        EnumPaymentStatus?
+  updatedAt     DateTime                  @updatedAt
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  fullName  String?
+  id        String   @id @default(cuid())
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
+
+model Menu {
+  createdAt   DateTime  @default(now())
+  description String?
+  id          String    @id @default(cuid())
+  image       Json?
+  items       String?
+  mealPlan    MealPlan? @relation(fields: [mealPlanId], references: [id])
+  mealPlanId  String?
+  name        String?
+  updatedAt   DateTime  @updatedAt
+}
+
+enum EnumNotificationTypeField {
+  Option1
+}
+
+enum EnumSubscriptionStatus {
+  Option1
+}
+
+enum EnumPaymentPaymentMethod {
+  Option1
+}
+
+enum EnumPaymentStatus {
+  Option1
+}
